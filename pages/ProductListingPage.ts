@@ -87,14 +87,14 @@ export class ProductListingPage {
    * @returns Promise<void>
    */
   async waitForAdding_AddedStatus(): Promise<void> {
-    try {
+     try {
       await this.addingStatus.waitFor({
         state: "visible",
-        timeout: 5000,
+        timeout:500,
       });
       await this.addedStatus.waitFor({
         state: "visible",
-        timeout: 5000,
+        timeout: 500,
       });
     } catch (error) {
       console.log("Adding/Added Status is not displayed");
