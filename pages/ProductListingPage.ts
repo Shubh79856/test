@@ -97,7 +97,7 @@ export class ProductListingPage {
         timeout: 500,
       });
     } catch (error) {
-      console.log("Adding/Added Status is not displayed");
+      console.log("Waited for Adding/Added Status");
     }
   }
   /**
