@@ -145,7 +145,9 @@ export class ProductListingPage {
   async navigateToShoppingCartFromNotification(): Promise<void> {
     await test.step("Navigate to the shopping cart page via notification link", async () => {
       // Wait for the link to be attached to the DOM (i.e., appears in the notification)
-      await this.cartLinkInNotification.waitFor({ state: "attached" });
+      await this.cartLinkInNotification.waitFor({  state: "visible",
+        timeout: 5000,
+      });
       // Click on the shopping cart link to navigate to the cart page
       await this.cartLinkInNotification.click();
     });
