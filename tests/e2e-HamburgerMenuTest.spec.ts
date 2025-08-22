@@ -18,13 +18,15 @@ test.describe("Hamburger Menu", { tag: "@e2e" }, async () => {
   }) => {
     await test.step("It can open Hamburger menu and validate a list of categories and subcategories are displayed", async () => {
       await homePage.clickHamburgerMenu();
+
       //Getting the list of product categories with help of locator
       const productCatItemsText = await (
         await homePage.getLocator_productCategories_menuList()
       ).allInnerTexts();
 
-      // Validate all expected categories exist in the list
+      // Validating all expected categories exist in the list
       for (const category of hamburgerMenuData.productCategoryList) {
+        //Soft Assert since values might differ for different environments
         await expect.soft(productCatItemsText).toContain(category);
       }
 
@@ -40,24 +42,39 @@ test.describe("Hamburger Menu", { tag: "@e2e" }, async () => {
     });
 
     await test.step("It can click on one of the Category headings and validate all results for that Category are displayed", async () => {
+      //Captures the list of Subcategory reflected below the Liquor Category in the Hamburger Menu
       const liquorSubcategoryList = await (
         await homePage.getLocator_liquorSubcategory_menuList()
       ).allInnerTexts();
-      //Clicking on one of the Liquor product category
+
+      //Clicking on the Liquor product category
       await homePage.clickLiquorCategory_HamburgerMenu();
 
       const expectedTitle = await productListingPage.getPageTitle();
-      await expect(appConstant.titleLiquorCategoryPage).toEqual(expectedTitle);
+      await expect(appConstant.titleLiquorCategoryPage.toLowerCase()).toEqual(
+        expectedTitle.toLowerCase()
+      );
 
       // Getting the liquor subcategory list from the Product Listing Page
+      //Locator
       const subcategoryList_Liquor =
         await productListingPage.getLocator_subcategoryList_FilterByCategory();
 
+      // Capturing the subcategory list reflected on the Product listing page under 'Filter By Category' section
       const subcategoryListAllinnerText_Liquor =
         await subcategoryList_Liquor.allInnerTexts();
 
-      for (const names of subcategoryListAllinnerText_Liquor) {
-        await expect(liquorSubcategoryList).toContain(names);
+      // Trimming the values of the sub-categories on product isting page to get the proper names
+      const trimmedSubCatList = subcategoryListAllinnerText_Liquor.map(
+        (item) => {
+          // This will get the value - everything before space+number
+          const match = item.match(/^(.*?)\s\d/);
+          return match ? match[1].trim() : item;
+        }
+      );
+
+      for (const names of await trimmedSubCatList) {
+        await expect(liquorSubcategoryList).toContain(names.toUpperCase());
       }
     });
   });
@@ -108,6 +125,7 @@ test.describe("Hamburger Menu", { tag: "@e2e" }, async () => {
   }) => {
     await test.step("It can open Hamburger menu and validate a list of categories and subcategories are displayed", async () => {
       await homePage.clickHamburgerMenu();
+
       //Getting the list of product categories with help of locator
       const productCatItemsText = await (
         await homePage.getLocator_productCategories_menuList()
@@ -124,7 +142,6 @@ test.describe("Hamburger Menu", { tag: "@e2e" }, async () => {
             categoryName
           )
         ).allInnerTexts();
-
         await expect(productSubcategoryList.length).toBeGreaterThan(1);
       }
     });

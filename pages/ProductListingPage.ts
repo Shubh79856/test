@@ -47,9 +47,9 @@ export class ProductListingPage {
     this.productGrid = page.locator(".products-grid");
     this.productNameLink_SKUsearch = page.locator(".product-item-link");
     this.productSearchedCount_SKUsearch = page.locator(".toolbar-number");
-    this.subcategoryList_FilterByCategory = page
-      .getByRole("tabpanel")
-      .getByRole("listitem");
+    this.subcategoryList_FilterByCategory = page.locator(
+      ".filter-options-content a > span"
+    );
   }
 
   /**
@@ -233,14 +233,19 @@ export class ProductListingPage {
    * @returns Promise<string>
    */
   async getPageTitle(): Promise<string> {
+    await this.page.waitForLoadState("domcontentloaded");
     return await this.page.title();
   }
 
   /**
    * Get Locator of the subcategory list reflected below the Filter By Category section
+   * @returns Promise<Locator>
    */
 
   async getLocator_subcategoryList_FilterByCategory(): Promise<Locator> {
+    await this.subcategoryList_FilterByCategory
+      .first()
+      .waitFor({ state: "visible" });
     return await this.subcategoryList_FilterByCategory;
   }
 }

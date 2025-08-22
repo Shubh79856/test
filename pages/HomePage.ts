@@ -452,10 +452,19 @@ export class HomePage {
     return this.pickupHoursModal;
   }
 
+  /**
+   * Get locator of the Product categories reflected under the Hamburger Menu List
+   * @returns Promise<Locator>
+   */
   async getLocator_productCategories_menuList(): Promise<Locator> {
     return await this.productCategories_menuList;
   }
 
+  /**
+   * Dynamic locator for the subcategory list based on the Category name parameter
+   * @param categoryName
+   * @returns Promise<Locator>
+   */
   async getLocatorDynamic_productSubcategoryMenuList(
     categoryName: string
   ): Promise<Locator> {
@@ -465,6 +474,36 @@ export class HomePage {
       .locator("li");
   }
 
+  /**
+   * Dynamic locator for the Delivery Hours Business Days
+   * @param day
+   * @returns
+   */
+  async getLocatorDynamic_deliveryBusinessDays(day: string): Promise<Locator> {
+    const dayTag = await this.page.locator(
+      `#business-hour-details p:has-text("${day}")`
+    );
+    await dayTag.waitFor({ state: "visible", timeout: 7000 });
+    return await dayTag;
+  }
+
+  /**
+   * Dynamic locator for the Pickup Hours Business Days
+   * @param day
+   * @returns
+   */
+  async getLocatorDynamic_pickupBusinessDays(day: string): Promise<Locator> {
+    const dayTag = await this.page.locator(
+      `#pickup-business-hour-details p:has-text("${day}")`
+    );
+    await dayTag.waitFor({ state: "visible", timeout: 7000 });
+    return await dayTag;
+  }
+
+  /**
+   * Get the locator for the subcategory list of the Liquor
+   * @returns Promise<Locator>
+   */
   async getLocator_liquorSubcategory_menuList(): Promise<Locator> {
     return this.liquorSubcategory_menuList;
   }

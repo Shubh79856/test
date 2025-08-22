@@ -12,13 +12,10 @@ test.describe("Pickup Hours", { tag: "@e2e" }, async () => {
   );
 
   test("C7519: Pickup hours are shown and modal can be closed", async ({
-    welcomePage,
-    page,
     homePage,
   }) => {
-    //Click on pickup hours
-    await homePage.clickPickupHours();
-    test.step("It can open Pickup Hours modal ", async () => {
+    await test.step("It can open Pickup Hours modal", async () => {
+      await homePage.clickPickupHours();
       await expect(
         (
           await (await homePage.getLocator_pickupHoursModal()).innerText()
@@ -26,13 +23,11 @@ test.describe("Pickup Hours", { tag: "@e2e" }, async () => {
       ).toEqual(appConstant.pickupHoursModal);
     });
 
-    test.step("It can show the times of Pickup for Monday - Sunday.", async () => {
+    await test.step("It can show the times of Pickup for Monday - Sunday", async () => {
       for (const day of appConstant.days) {
-        const dayTag = page.locator(
-          `#pickup-business-hour-details p:has-text("${day}")`
-        );
+        const dayTag = await homePage.getLocatorDynamic_pickupBusinessDays(day);
+
         //Validate the day value exist
-        await dayTag.waitFor({ state: "visible", timeout: 7000 });
         await expect(dayTag).toBeVisible();
 
         // Extract the full text (e.g., "Monday: 10 AM - 7 PM")
@@ -46,7 +41,7 @@ test.describe("Pickup Hours", { tag: "@e2e" }, async () => {
       }
     });
 
-    test.step("It can click any where on the page & validate Pickup Hours modal is closed", async () => {
+    await test.step("It can click any where on the page & validate Pickup Hours modal is closed", async () => {
       await (await homePage.getLocator_pickupHoursModal()).click();
       await expect(
         await homePage.getLocator_pickupHoursModal()
