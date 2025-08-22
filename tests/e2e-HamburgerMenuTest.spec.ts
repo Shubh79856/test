@@ -152,7 +152,7 @@ test.describe("Hamburger Menu", { tag: "@e2e" }, async () => {
         await homePage.getLocator_productCategories_menuList()
       ).allInnerTexts();
 
-      // Validate all the expected categories exist in the list
+      // Validate all expected categories exist in the list
       for (const category of hamburgerMenuData.productCategoryList) {
         await expect.soft(productCatItemsText).toContain(category);
       }
