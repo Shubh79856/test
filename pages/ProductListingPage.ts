@@ -1,4 +1,5 @@
 import { test, Locator, Page, expect } from "@playwright/test";
+import { promises } from "dns";
 
 /**
  * This class contains all the locators and actions of the Product Listing Page
@@ -15,6 +16,9 @@ export class ProductListingPage {
   private readonly productCardList: Locator;
   private readonly noProductFoundText: Locator;
   private readonly productGrid: Locator;
+  private readonly productNameLink_SKUsearch: Locator;
+  private readonly productSearchedCount_SKUsearch: Locator;
+  private readonly subcategoryList_FilterByCategory: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -41,6 +45,11 @@ export class ProductListingPage {
       "Your search returned no results."
     );
     this.productGrid = page.locator(".products-grid");
+    this.productNameLink_SKUsearch = page.locator(".product-item-link");
+    this.productSearchedCount_SKUsearch = page.locator(".toolbar-number");
+    this.subcategoryList_FilterByCategory = page.locator(
+      ".filter-options-content a > span"
+    );
   }
 
   /**
@@ -190,7 +199,53 @@ export class ProductListingPage {
    * @returns  Promise<Locator>
    */
   async getLocator_productGrid(): Promise<Locator> {
-    await this.productGrid.waitFor({ state: "visible", timeout: 7 * 1000 });
+    await this.productGrid
+      .first()
+      .waitFor({ state: "visible", timeout: 7 * 1000 });
     return await this.productGrid;
+  }
+
+  /**
+   * Get Locator for the product name when SKU is searched
+   * @returns Promise<Locator>
+   */
+  async getLocator_productNameLink_forSKUsearch(): Promise<Locator> {
+    await this.productNameLink_SKUsearch
+      .first()
+      .waitFor({ state: "visible", timeout: 7 * 1000 });
+
+    return await this.productNameLink_SKUsearch;
+  }
+
+  /**
+   * Get locator of the result count if the searched SKU
+   * @returns Promise<Locator>
+   */
+  async getLocator_productSearchedCount_SKUsearch(): Promise<Locator> {
+    await this.productSearchedCount_SKUsearch
+      .first()
+      .waitFor({ state: "visible", timeout: 7 * 1000 });
+
+    return await this.productSearchedCount_SKUsearch;
+  }
+  /**
+   * Get the title of the page
+   * @returns Promise<string>
+   */
+  async getPageTitle(): Promise<string> {
+    await this.page.waitForLoadState("domcontentloaded");
+    return await this.page.title();
+  }
+
+  /**
+   * Get Locator of the subcategory list reflected below the Filter By Category section
+   * @returns Promise<Locator>
+   */
+
+  async getLocator_subcategoryList_FilterByCategory(): Promise<Locator> {
+    await this.subcategoryList_FilterByCategory
+      .first()
+      .waitFor({ state: "visible" });
+    return await this.subcategoryList_FilterByCategory;
   }
 }
