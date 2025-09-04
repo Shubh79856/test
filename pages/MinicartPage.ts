@@ -158,4 +158,9 @@ export class MinicartPage {
   async clickOkAttentionPopup(): Promise<void> {
     await this.OKbuttonAttentionBox.click();
   }
+
+  async getCounterNumber(): Promise<string | null> {
+    await this.minicartCount.waitFor({ state: "visible", timeout: 15 * 1000 });
+    return (await this.minicartCount.innerText())?.trim();
+  }
 }
